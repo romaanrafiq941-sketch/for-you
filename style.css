@@ -1,0 +1,134 @@
+/* Custom styling & envelope animations */
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #fff1f2;
+}
+::-webkit-scrollbar-thumb {
+  background: #fda4af;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fb7185;
+}
+
+/* 3D Envelope Component */
+.envelope-wrapper {
+  position: relative;
+  perspective: 1000px;
+}
+
+.envelope {
+  position: relative;
+  width: 280px;
+  height: 180px;
+  background-color: #f43f5e;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  box-shadow: 0 15px 30px rgba(244, 63, 94, 0.25);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.envelope .front {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 3;
+}
+
+.envelope .flap {
+  border-left: 140px solid transparent;
+  border-right: 140px solid transparent;
+  border-top: 105px solid #e11d48;
+  top: 0;
+  left: 0;
+  transform-origin: top;
+  transition: transform 0.6s 0.2s ease, z-index 0.2s 0.4s ease;
+  z-index: 4;
+}
+
+.envelope.open .flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+  transition: transform 0.5s ease, z-index 0.2s ease;
+}
+
+.envelope .pocket {
+  border-left: 140px solid #fb7185;
+  border-right: 140px solid #fb7185;
+  border-bottom: 95px solid #f43f5e;
+  border-top: 85px solid transparent;
+  bottom: 0;
+  left: 0;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  z-index: 3;
+}
+
+.envelope .wax-seal {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
+  background: radial-gradient(circle, #be123c 40%, #9f1239 100%);
+  border-radius: 50%;
+  border: 2px solid #fda4af;
+  z-index: 5;
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.envelope.open .wax-seal {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.4);
+  pointer-events: none;
+}
+
+.envelope .letter {
+  position: absolute;
+  bottom: 8px;
+  left: 14px;
+  width: 252px;
+  height: 156px;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  z-index: 2;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.envelope.open .letter {
+  transform: translateY(-90px);
+  z-index: 5;
+}
+
+/* Polaroid Card Effect */
+.polaroid-card {
+  background: #ffffff;
+  padding: 12px 12px 18px 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.polaroid-card:hover {
+  transform: translateY(-6px) rotate(0deg) scale(1.02) !important;
+  box-shadow: 0 20px 30px -10px rgba(244, 63, 94, 0.2);
+}
+
+/* Floating animation delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Runaway button smooth absolute transition */
+#noBtn.dodging {
+  position: fixed !important;
+  transition: left 0.25s ease-out, top 0.25s ease-out;
+}

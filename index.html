@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Special Question for You ❤️</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+            handwritten: ['Caveat', 'cursive'],
+          },
+          colors: {
+            rosewater: '#fff1f2',
+            blush: '#ffe4e6',
+            hotpink: '#f43f5e',
+            softwine: '#881337',
+          },
+          animation: {
+            'float-slow': 'float 6s ease-in-out infinite',
+            'float-reverse': 'floatRev 7s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 2s infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-14px) rotate(3deg)' },
+            },
+            floatRev: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-18px) rotate(-4deg)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { boxShadow: '0 0 15px rgba(244, 63, 94, 0.4)' },
+              '50%': { boxShadow: '0 0 30px rgba(244, 63, 94, 0.8)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gradient-to-b from-rose-50 via-pink-50 to-rose-100 text-gray-800 min-h-screen relative overflow-x-hidden selection:bg-pink-200">
+
+  <!-- Background Floating Hearts Canvas -->
+  <canvas id="hearts-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+  <!-- Sound Toggle Button -->
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+    <button id="customizeBtn" class="flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3 py-2 rounded-full shadow-md text-xs font-medium text-gray-700 hover:text-rose-600 hover:bg-white transition-all transform active:scale-95 border border-pink-100">
+      <i data-lucide="edit-3" class="w-3.5 h-3.5 text-rose-500"></i>
+      <span>Customize</span>
+    </button>
+    <button id="musicToggleBtn" class="flex items-center gap-2 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-full shadow-md text-xs font-medium text-pink-700 hover:bg-white transition-all transform active:scale-95 border border-pink-100">
+      <i data-lucide="music" class="w-4 h-4 text-pink-500"></i>
+      <span id="musicStatusText">Play Soft Music</span>
+    </button>
+  </div>
+
+  <main class="relative z-10 max-w-xl mx-auto px-4 py-12 flex flex-col items-center">
+    
+    <!-- PHASE 1: ENVELOPE / INTRO SCREEN -->
+    <section id="envelope-section" class="w-full text-center flex flex-col items-center justify-center min-h-[80vh]">
+      <div class="inline-flex items-center gap-2 bg-rose-100 border border-rose-200 text-rose-700 px-4 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase mb-6 shadow-sm animate-pulse">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-500"></i>
+        <span>Special Delivery For You</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-gray-900 leading-tight mb-3">
+        Hey <span id="herNameDisplay" class="text-rose-600 underline decoration-pink-300 decoration-wavy">My Favorite Person</span> ✨
+      </h1>
+
+      <p class="text-base sm:text-lg text-gray-600 max-w-md mx-auto mb-8 font-light">
+        Someone has put together a little surprise for you. Are you ready to see it?
+      </p>
+
+      <!-- Interactive Envelope -->
+      <div id="envelope" class="envelope-wrapper cursor-pointer group my-4">
+        <div class="envelope shadow-2xl transition-transform duration-300 group-hover:scale-105">
+          <div class="front flap"></div>
+          <div class="front pocket"></div>
+          <div class="letter shadow-md">
+            <div class="text-[11px] text-pink-500 font-mono tracking-widest uppercase text-center mb-1">Open Me</div>
+            <div class="w-8 h-0.5 bg-pink-200 mx-auto mb-2"></div>
+            <p class="font-handwritten text-xl text-rose-800 text-center leading-snug">
+              "Every moment with you is my new favorite memory..."
+            </p>
+          </div>
+          <div class="wax-seal flex items-center justify-center text-white shadow-lg">
+            <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
+          </div>
+        </div>
+      </div>
+
+      <button id="openLetterBtn" class="mt-8 px-7 py-3 rounded-full bg-rose-500 text-white font-medium shadow-lg shadow-rose-200 hover:bg-rose-600 hover:shadow-xl transition-all transform active:scale-95 flex items-center gap-2">
+        <span>Click to Open Letter</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </section>
+
+
+    <!-- PHASE 2: STORY / MEMORIES / THE QUESTION (Hidden initially) -->
+    <section id="content-section" class="w-full hidden opacity-0 transition-opacity duration-700">
+      
+      <!-- Romantic Note -->
+      <div class="bg-white/85 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-pink-100 text-center relative mb-12">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-9 h-9 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-md">
+          <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
+        </div>
+        <p class="font-serif italic text-lg sm:text-xl text-gray-800 leading-relaxed mt-2" id="loveMessage">
+          From the endless laughs and late-night talks to the little random moments where you make my entire day brighter... you've become the most special part of my world.
+        </p>
+        <span class="block font-handwritten text-2xl text-rose-600 mt-4" id="signatureDisplay">
+          — Yours Always ❤️
+        </span>
+      </div>
+
+      <!-- Memory Gallery / Polaroids -->
+      <div class="mb-12">
+        <div class="text-center mb-6">
+          <h2 class="text-xl sm:text-2xl font-serif font-bold text-gray-900">A Few Favorite Moments 📸</h2>
+          <p class="text-xs sm:text-sm text-gray-500">Every single day is better with you in it</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="memoriesGrid">
+          <!-- Polaroid cards injected by script -->
+        </div>
+      </div>
+
+      <!-- Little reasons why -->
+      <div class="mb-14">
+        <div class="text-center mb-6">
+          <h2 class="text-xl sm:text-2xl font-serif font-bold text-gray-900">Things I Love About You ✨</h2>
+          <p class="text-xs sm:text-sm text-gray-500">Just a tiny list among millions</p>
+        </div>
+
+        <div class="space-y-3" id="reasonsList">
+          <!-- Reasons injected by script -->
+        </div>
+      </div>
+
+      <!-- THE BIG QUESTION SECTION -->
+      <div id="proposalCard" class="bg-gradient-to-br from-rose-500 to-pink-600 text-white rounded-3xl p-8 sm:p-10 shadow-2xl text-center relative overflow-hidden border-4 border-white/60 mb-16">
+        
+        <!-- Decorative Sparkles -->
+        <div class="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -left-8 -bottom-8 w-28 h-28 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+
+        <span class="inline-block text-3xl sm:text-4xl mb-3 animate-bounce">💍</span>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-serif font-bold tracking-tight mb-2">
+          Will You Be My Girlfriend?
+        </h2>
+        <p class="text-pink-100 text-sm sm:text-base max-w-sm mx-auto mb-8 font-light">
+          I don't just want you as my best friend... I want to hold your hand through everything.
+        </p>
+
+        <!-- Interactive Buttons Container -->
+        <div class="relative min-h-[140px] flex items-center justify-center gap-6" id="actionButtonsContainer">
+          
+          <!-- YES BUTTON -->
+          <button id="yesBtn" class="px-8 py-3.5 sm:px-10 sm:py-4 bg-white text-rose-600 font-bold text-base sm:text-lg rounded-full shadow-xl hover:bg-rose-50 hover:shadow-2xl transition-all transform hover:scale-110 active:scale-95 animate-pulse-glow flex items-center gap-2 z-20">
+            <i data-lucide="heart" class="w-5 h-5 fill-current text-rose-500"></i>
+            <span>YES! Absolutely!</span>
+          </button>
+
+          <!-- NO / RUNAWAY BUTTON -->
+          <button id="noBtn" class="px-6 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-medium text-sm sm:text-base rounded-full transition-all duration-200 border border-white/30 z-20 whitespace-nowrap">
+            <span>No</span>
+          </button>
+        </div>
+
+        <p id="funMessage" class="text-xs text-pink-200 mt-4 min-h-[18px] transition-all font-mono"></p>
+      </div>
+
+    </section>
+
+    <!-- PHASE 3: CELEBRATION MODAL (Hidden until "YES") -->
+    <div id="celebrationModal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-500">
+      <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center relative shadow-2xl border-4 border-pink-200 transform scale-90 transition-transform duration-500" id="celebrationCard">
+        
+        <div class="w-20 h-20 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+          <i data-lucide="party-popper" class="w-10 h-10 animate-bounce"></i>
+        </div>
+
+        <h3 class="text-2xl sm:text-3xl font-serif font-bold text-gray-900 mb-2">
+          SHE SAID YES! 🎉🥳
+        </h3>
+
+        <p class="font-handwritten text-3xl text-rose-600 mb-4">
+          Best Day Ever! ❤️
+        </p>
+
+        <p class="text-sm text-gray-600 leading-relaxed mb-6" id="celebrationMessage">
+          You just made me the happiest person in the universe! I promise to make you smile every single day, bring you food, and be your biggest cheerleader.
+        </p>
+
+        <div class="bg-rose-50 border border-rose-200 rounded-2xl p-4 mb-6">
+          <p class="text-xs text-rose-800 font-medium">
+            📸 Take a screenshot right now and send it to me with your favorite emoji!
+          </p>
+        </div>
+
+        <button id="closeModalBtn" class="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-full shadow-lg shadow-rose-200 transition-all transform active:scale-95">
+          Forever & Always ❤️
+        </button>
+      </div>
+    </div>
+
+    <!-- PHASE 4: IN-PAGE CUSTOMIZER MODAL -->
+    <div id="customizeModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+      <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-pink-100 text-left">
+        <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🪄</span>
+            <h3 class="font-serif font-bold text-xl text-gray-900">Personalize Your Proposal</h3>
+          </div>
+          <button id="closeCustomizeBtn" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form id="customizeForm" class="space-y-4 text-xs sm:text-sm">
+          <div>
+            <label class="block font-medium text-gray-700 mb-1">Her Name or Nickname</label>
+            <input type="text" id="inputHerName" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-400" placeholder="e.g. Maya / Pookie" required />
+          </div>
+
+          <div>
+            <label class="block font-medium text-gray-700 mb-1">Your Name or Sign-off</label>
+            <input type="text" id="inputYourName" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-400" placeholder="e.g. Uzair" required />
+          </div>
+
+          <div>
+            <label class="block font-medium text-gray-700 mb-1">Heartfelt Love Note</label>
+            <textarea id="inputLoveMessage" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-400" placeholder="Write what you love about her..."></textarea>
+          </div>
+
+          <div class="border-t border-gray-100 pt-3">
+            <h4 class="font-semibold text-gray-800 mb-2">Favorite Memories (Photos & Captions)</h4>
+            <div class="space-y-3">
+              <div class="p-3 bg-pink-50/60 rounded-xl space-y-2 border border-pink-100">
+                <span class="font-medium text-rose-800 text-[11px] uppercase tracking-wider">Memory 1</span>
+                <input type="text" id="inputMemoryTitle1" placeholder="Title (e.g. The Day We Met)" class="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-xs" />
+                <input type="text" id="inputMemoryCaption1" placeholder="Caption (e.g. Still can't stop smiling thinking about it)" class="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-xs" />
+              </div>
+
+              <div class="p-3 bg-pink-50/60 rounded-xl space-y-2 border border-pink-100">
+                <span class="font-medium text-rose-800 text-[11px] uppercase tracking-wider">Memory 2</span>
+                <input type="text" id="inputMemoryTitle2" placeholder="Title (e.g. Late Night Drives)" class="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-xs" />
+                <input type="text" id="inputMemoryCaption2" placeholder="Caption (e.g. Good music and the best company)" class="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-xs" />
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-rose-50 border border-rose-200 rounded-xl p-3 text-rose-900 text-[11px] leading-relaxed">
+            💡 <strong>Tip:</strong> Changes save instantly to your browser! Once you're happy with it, you can hide this Customize button before sending her the link.
+          </div>
+
+          <div class="flex items-center gap-2 pt-2">
+            <button type="submit" class="flex-1 py-3 bg-rose-500 hover:bg-rose-600 text-white font-medium rounded-xl shadow-md shadow-rose-200 transition-all">
+              Save & Preview Now ✨
+            </button>
+            <button type="button" id="resetDefaultsBtn" class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium rounded-xl transition-all">
+              Reset
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Background Music Audio element (lofi ambient) -->
+  <audio id="bgMusic" loop preload="auto">
+    <!-- Royalty free soft peaceful lofi audio stream -->
+    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mp3">
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
